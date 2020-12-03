@@ -1,64 +1,5 @@
 """
-futurize: automatic conversion to clean 2/3 code using ``python-future``
-======================================================================
-
-Like Armin Ronacher's modernize.py, ``futurize`` attempts to produce clean
-standard Python 3 code that runs on both Py2 and Py3.
-
-One pass
---------
-
-Use it like this on Python 2 code:
-
-  $ futurize --verbose mypython2script.py
-
-This will attempt to port the code to standard Py3 code that also
-provides Py2 compatibility with the help of the right imports from
-``future``.
-
-To write changes to the files, use the -w flag.
-
-Two stages
-----------
-
-The ``futurize`` script can also be called in two separate stages. First:
-
-  $ futurize --stage1 mypython2script.py
-
-This produces more modern Python 2 code that is not yet compatible with Python
-3. The tests should still run and the diff should be uncontroversial to apply to
-most Python projects that are willing to drop support for Python 2.5 and lower.
-
-After this, the recommended approach is to explicitly mark all strings that must
-be byte-strings with a b'' prefix and all text (unicode) strings with a u''
-prefix, and then invoke the second stage of Python 2 to 2/3 conversion with::
-
-  $ futurize --stage2 mypython2script.py
-
-Stage 2 adds a dependency on ``future``. It converts most remaining Python
-2-specific code to Python 3 code and adds appropriate imports from ``future``
-to restore Py2 support.
-
-The command above leaves all unadorned string literals as native strings
-(byte-strings on Py2, unicode strings on Py3). If instead you would like all
-unadorned string literals to be promoted to unicode, you can also pass this
-flag:
-
-  $ futurize --stage2 --unicode-literals mypython2script.py
-
-This adds the declaration ``from __future__ import unicode_literals`` to the
-top of each file, which implicitly declares all unadorned string literals to be
-unicode strings (``unicode`` on Py2).
-
-All imports
------------
-
-The --all-imports option forces adding all ``__future__`` imports,
-``builtins`` imports, and standard library aliases, even if they don't
-seem necessary for the current state of each module. (This can simplify
-testing, and can reduce the need to think about Py2 compatibility when editing
-the code further.)
-
+See: `libfuturize.main`
 """
 
 from __future__ import (absolute_import, print_function, unicode_literals)
@@ -73,7 +14,7 @@ from lib2to3.main import warn
 
 import future.utils
 from dominate import document
-from dominate.tags import a, h1, table, tbody, td, th, thead, tr
+from dominate.tags import a, b, h1, p, table, tbody, td, th, thead, tr
 from future import __version__
 from libfuturize.fixes import (lib2to3_fix_names_stage1,
                                lib2to3_fix_names_stage2,
@@ -334,8 +275,21 @@ def futurize_code(args=None):
                 return 1
         rt.summarize()
 
+    table_body = tbody()
+    remove_line_count_total = 0
+    with table_body:
+        for file_name, file_summary in DiffSummary.list_all():
+            with tr():
+                td(a(file_name, href='{diff_dir}/{filename}.diff'.format(diff_dir=DIFF_DIR,
+                                                                         filename=file_name)))
+                td(file_summary.add_line_count, style="text-align:right")
+                td(file_summary.remove_line_count, style="text-align:right")
+                td(file_summary.percent_coverage, style="text-align:right")
+                remove_line_count_total += file_summary.remove_line_count
+
     with document(title='2/3 Summary') as doc:
         h1('2/3 Summary', style='padding: 0 40px;')
+        p('Total lines that need to be removed:', style='padding: 0 40px;').add(b(remove_line_count_total))
         summary_table = table(width='100%', style="padding: 20px 40px; margin: 0 auto;")
         with summary_table.add(thead()):
             with tr():
@@ -343,14 +297,7 @@ def futurize_code(args=None):
                 th('Add Lines', style="text-align:right")
                 th('Remove Lines', style="text-align:right")
                 th('Coverage %', style="text-align:right")
-        with summary_table.add(tbody()):
-            for file_name, file_summary in DiffSummary.list_all():
-                with tr():
-                    td(a(file_name, href='{diff_dir}/{filename}.diff'.format(diff_dir=DIFF_DIR,
-                                                                             filename=file_name)))
-                    td(file_summary.add_line_count, style="text-align:right")
-                    td(file_summary.remove_line_count, style="text-align:right")
-                    td(file_summary.percent_coverage, style="text-align:right")
+            summary_table.add(table_body)
 
     with open('{results_dir}/summary.html'.format(results_dir=RESULTS_DIR), 'w+') as summary_file:
         summary_file.write(doc.render())

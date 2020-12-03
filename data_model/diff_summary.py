@@ -58,5 +58,5 @@ class DiffSummary(object):
         """
         :rtype: Generator[(str, DiffSummary)]
         """
-        for file_name, instance_ref in cls.registry.items():
-            yield file_name, instance_ref
+        for file_name in sorted(cls.registry):
+            yield file_name, cls.registry[file_name]

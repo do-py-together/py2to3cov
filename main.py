@@ -19,7 +19,7 @@ def get_all_python_files(root):
     :rtype: list of str
     """
     python_files = []
-    for sub_directory in ['kilimanjaro_src']:
+    for sub_directory in ['kilimanjaro_src', 'testing', 'assets']:
         for subdir, _, files in os.walk(os.path.join(root, sub_directory)):
             for file_name in files:
                 if file_name.endswith('.py'):
