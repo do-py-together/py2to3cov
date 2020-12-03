@@ -280,8 +280,7 @@ def futurize_code(args=None):
     with table_body:
         for file_name, file_summary in DiffSummary.list_all():
             with tr():
-                td(a(file_name, href='{diff_dir}/{filename}.diff'.format(diff_dir=DIFF_DIR,
-                                                                         filename=file_name)))
+                td(a(file_name, href=file_summary.href))
                 td(file_summary.add_line_count, style="text-align:right")
                 td(file_summary.remove_line_count, style="text-align:right")
                 td(file_summary.percent_coverage, style="text-align:right")

@@ -1,7 +1,7 @@
 """
 Store and register the diff summary.
 """
-from mgmt.const import KILI_ROOT
+from mgmt.const import DIFF_DIR, KILI_ROOT
 
 
 class DiffSummary(object):
@@ -29,7 +29,10 @@ class DiffSummary(object):
         """
         :rtype: float
         """
-        return '%.2f%%' % round(100.0 * self.remove_line_count / self.line_count, 2)
+        if self.remove_line_count:
+            return '%.2f%%' % (100 - round(100.0 * self.remove_line_count / self.line_count, 2))
+        else:
+            return '100%'
 
     @property
     def add_line_count(self):
@@ -60,3 +63,14 @@ class DiffSummary(object):
         """
         for file_name in sorted(cls.registry):
             yield file_name, cls.registry[file_name]
+
+    @property
+    def href(self):
+        """
+        :rtype: str
+        """
+        if self.remove_line_count:
+            return '{diff_dir}/{filename}.diff'.format(diff_dir=DIFF_DIR,
+                                                       filename=self.filename)
+        else:
+            return 'javascript:void(null);'

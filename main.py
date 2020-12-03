@@ -19,8 +19,8 @@ def get_all_python_files(root):
     :rtype: list of str
     """
     python_files = [os.path.join(root, 'kilimanjaro.py')]
-    for sub_directory in ['assets']:
     # for sub_directory in ['kilimanjaro_src', 'testing', 'assets']:
+    for sub_directory in ['kilimanjaro_src/comm/']:
         for subdir, _, files in os.walk(os.path.join(root, sub_directory)):
             for file_name in files:
                 if file_name.endswith('.py'):
@@ -30,7 +30,12 @@ def get_all_python_files(root):
 
 def python3_lint():
     python_files = get_all_python_files(KILI_ROOT)
-    arguments = ['-0', '-x', 'absolute_import', '-n', '-o', '/tmp/linted', '-w'] + python_files
+    # Rules I probably want: fix_xrange
+    # Rules I want to avoid: list(Dict.items())
+    # `dict`: We want to avoid using this initially because it makes us do things like list(keys()), but without it
+    # there is no diff for `iteritems` usages.
+    # arguments = ['-0', '-x', 'absolute_import', '-n', '-o', '/tmp/linted', '-w'] + python_files
+    arguments = ['-0', '-x', 'absolute_import', '-x', 'dict', '-n', '-o', '/tmp/linted', '-w'] + python_files
     result = futurize_code(arguments)
     sys.exit(result)
 
