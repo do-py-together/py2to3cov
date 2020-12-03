@@ -1,1 +1,7 @@
+# Python compile and backup files
+*.pyc
+*.py.bak
+
+# Misc
 .idea/*
+.DS_Store
