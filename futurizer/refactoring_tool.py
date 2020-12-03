@@ -14,12 +14,12 @@ class FileRefactoringTool(StdoutRefactoringTool):
         pass
 
     def print_output(self, old, new, filename, equal):
-        if not equal:
+        filename = filename.replace(KILI_ROOT + '/', '')
+        if equal:
+            DiffSummary(filename)
+        else:
             if self.show_diffs:
                 diff_lines = diff_texts(old, new, filename)
-                # NOTE: If we want this to work for other projects, this won't work.
-                filename = filename.replace(KILI_ROOT + '/', '')
-
                 # Create the directories needed to create the files in the diff directory.
                 dirs = ''
                 for subdir in filename.split('/')[:-1]:
