@@ -6,12 +6,14 @@ TODO:
   2) Give a number, number of lines, packages, etc.
   3) Git hook that won't allow non python 2/3 code to be pushed.
 """
+import argparse
 import os
 import subprocess
+
 import sys
 
 from futurizer import futurize_code
-from mgmt.const import KILI_ROOT
+from mgmt.const import KILI_ROOT, Repository
 
 
 def get_diff_python_files(root, compare_branch='origin/master'):
@@ -40,12 +42,20 @@ def get_all_python_files(root):
     return python_files
 
 
-def python3_lint():
-    # python_files = get_all_python_files(KILI_ROOT)
-    python_files = get_diff_python_files(KILI_ROOT)
-    if not python_files:
-        print('No python files in diff.')
-        sys.exit(0)
+def python3_lint(diff=False, repository=Repository.KILIMANJARO):
+    """
+    :type diff: bool
+    :type repository: str
+    """
+    assert repository in Repository.allowed, 'Invalid repository. %s is not supported by py2to3cov.' % repository
+    if diff:
+        python_files = get_diff_python_files(KILI_ROOT)
+        if not python_files:
+            print('No python files in diff.')
+            sys.exit(0)
+    else:
+        python_files = get_all_python_files(KILI_ROOT)
+
     # Rules I probably want: fix_xrange
     # Rules I want to avoid: list(Dict.items())
     # `dict`: We want to avoid using this initially because it makes us do things like list(keys()), but without it
@@ -57,4 +67,10 @@ def python3_lint():
 
 
 if __name__ == '__main__':
-    python3_lint()
+    parser = argparse.ArgumentParser(description='Run the Py 2/3 coverage report.')
+    parser.add_argument('--diff', action='store_true', default=False, help='Run report on the diff only.')
+    parser.add_argument('--repo',
+                        default=Repository.KILIMANJARO,
+                        help='What repo to run the report for.')
+    args = parser.parse_args()
+    python3_lint(diff=args.diff, repository=args.repo)

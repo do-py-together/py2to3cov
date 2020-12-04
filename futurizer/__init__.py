@@ -255,6 +255,7 @@ def futurize_code(args=None):
         shutil.rmtree(DIFF_DIR)
     os.mkdir(DIFF_DIR)
 
+    # We override their RefactoringTool with `FileRefactoringTool`
     rt = FileRefactoringTool(
         sorted(fixer_names), flags, sorted(explicit),
         options.nobackups, not options.no_diffs,
@@ -275,6 +276,7 @@ def futurize_code(args=None):
                 return 1
         rt.summarize()
 
+    # This is our own custom html reporting.
     table_body = tbody()
     remove_line_count_total = 0
     with table_body:
