@@ -43,6 +43,9 @@ def get_all_python_files(root):
 def python3_lint():
     # python_files = get_all_python_files(KILI_ROOT)
     python_files = get_diff_python_files(KILI_ROOT)
+    if not python_files:
+        print('No python files in diff.')
+        sys.exit(0)
     # Rules I probably want: fix_xrange
     # Rules I want to avoid: list(Dict.items())
     # `dict`: We want to avoid using this initially because it makes us do things like list(keys()), but without it
