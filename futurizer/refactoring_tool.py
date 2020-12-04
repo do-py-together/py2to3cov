@@ -34,3 +34,9 @@ class FileRefactoringTool(StdoutRefactoringTool):
                     for line in diff_lines:
                         diff_file.write(line + '\n')
                         diff_summary.append_line(line)
+                if diff_summary.line_count:
+                    self.errors.append(('{filename}: Add {add}, remove {remove}'.format(
+                        filename=filename,
+                        add=diff_summary.add_line_count,
+                        remove=diff_summary.remove_line_count
+                        ), (), {}))
