@@ -21,9 +21,9 @@ from libfuturize.fixes import (lib2to3_fix_names_stage1,
                                libfuturize_fix_names_stage1,
                                libfuturize_fix_names_stage2)
 
-from data_model.diff_summary import DiffSummary
-from futurizer.refactoring_tool import FileRefactoringTool
-from mgmt.const import DIFF_DIR, RESULTS_DIR
+from py2to3cov.data_model.diff_summary import DiffSummary
+from py2to3cov.futurizer.refactoring_tool import FileRefactoringTool
+from py2to3cov.mgmt.const import DIFF_DIR, RESULTS_DIR
 
 
 fixer_pkg = 'libfuturize.fixes'

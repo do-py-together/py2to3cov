@@ -1,8 +1,8 @@
 import os
 from lib2to3.main import StdoutRefactoringTool, diff_texts
 
-from data_model.diff_summary import DiffSummary
-from mgmt.const import DIFF_DIR, KILI_ROOT
+from py2to3cov.data_model.diff_summary import DiffSummary
+from py2to3cov.mgmt.const import DIFF_DIR, ROOT
 
 
 class FileRefactoringTool(StdoutRefactoringTool):
@@ -14,7 +14,7 @@ class FileRefactoringTool(StdoutRefactoringTool):
         pass
 
     def print_output(self, old, new, filename, equal):
-        filename = filename.replace(KILI_ROOT + '/', '')
+        filename = filename.replace(ROOT + '/', '')
         if equal:
             DiffSummary(filename)
         else:

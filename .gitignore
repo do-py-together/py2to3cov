@@ -2,6 +2,20 @@
 *.pyc
 *.py.bak
 
+# Build and deploy
+build/
+dist/
+*.egg-info
+node_modules/
+
+# Testing
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache
+test-reports/
+/py2to3cov-reports/
+
 # Misc
-.idea/*
+.idea/
 .DS_Store

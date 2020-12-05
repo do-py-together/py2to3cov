@@ -1,7 +1,7 @@
 """
 Store and register the diff summary.
 """
-from mgmt.const import DIFF_DIR, KILI_ROOT
+from py2to3cov.mgmt.const import DIFF_DIR, ROOT
 
 
 class DiffSummary(object):
@@ -20,7 +20,7 @@ class DiffSummary(object):
         """
         :rtype: int
         """
-        with open('{root_dir}/{filename}'.format(root_dir=KILI_ROOT, filename=self.filename)) as original_file:
+        with open('{root_dir}/{filename}'.format(root_dir=ROOT, filename=self.filename)) as original_file:
             line_count = len(original_file.readlines())
         return line_count
 
