@@ -40,9 +40,10 @@ def get_all_python_files(root):
     return python_files
 
 
-def python3_lint(diff=False):
+def get_python_files(diff=False):
     """
     :type diff: bool
+    :rtype: list of str
     """
     if diff:
         python_files = get_diff_python_files(os.getcwd())
@@ -51,7 +52,14 @@ def python3_lint(diff=False):
             sys.exit(0)
     else:
         python_files = get_all_python_files(os.getcwd())
+    return python_files
 
+
+def python3_lint(diff=False):
+    """
+    :type diff: bool
+    """
+    python_files = get_python_files(diff=diff)
     # Rules I probably want: fix_xrange
     # Rules I want to avoid: list(Dict.items())
     # `dict`: We want to avoid using this initially because it makes us do things like list(keys()), but without it
@@ -59,7 +67,13 @@ def python3_lint(diff=False):
     # arguments = ['-0', '-x', 'absolute_import', '-n', '-o', '/tmp/linted', '-w'] + python_files
     arguments = ['-0', '-x', 'absolute_import', '-x', 'dict', '-n', '-o', '/tmp/linted', '-w'] + python_files
     result = futurize_code(arguments)
-    sys.exit(result)
+    if diff:
+        # This is generally used in .githook; We need to exit with failure code if there are changes required.
+        sys.exit(result)
+    else:
+        # This is generally used in CI implementations; We don't want to exit with a failure code if we
+        # successfully linted.
+        sys.exit(0)
 
 
 def main():
