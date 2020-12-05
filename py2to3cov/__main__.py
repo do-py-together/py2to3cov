@@ -63,8 +63,15 @@ def python3_lint(diff=False):
     sys.exit(result)
 
 
-if __name__ == '__main__':
+def main():
+    """
+    Main entry point for package.
+    """
     parser = argparse.ArgumentParser(description='Run the Py 2/3 coverage report.')
     parser.add_argument('--diff', action='store_true', default=False, help='Run report on the diff only.')
     args = parser.parse_args()
     python3_lint(diff=args.diff)
+
+
+if __name__ == '__main__':
+    main()

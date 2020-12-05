@@ -47,6 +47,9 @@ setuptools.setup(
         'Programming Language :: Python :: 2.7',
         ],
     keywords=['development', 'OO'],
+    entry_points={
+        'console_scripts': ['py2to3cov=py2to3cov.__main__:main'],
+        }
     # https://docs.python.org/2/distutils/setupscript.html#installing-additional-files
     # data_files=[
     #     ('.py2to3cov.json', ['config/config.json'])
