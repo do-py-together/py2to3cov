@@ -31,9 +31,8 @@ def get_all_python_files(root):
     :type root: str
     :rtype: list of str
     """
-    parent_dir = os.path.abspath(os.path.join(root, os.pardir))
     python_files = []
-    for sub_directory in [parent_dir]:
+    for sub_directory in [root]:
         for subdir, _, files in os.walk(os.path.join(root, sub_directory)):
             for file_name in files:
                 if file_name.endswith('.py'):
