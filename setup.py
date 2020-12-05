@@ -48,7 +48,7 @@ setuptools.setup(
         ],
     keywords=['development', 'OO'],
     # https://docs.python.org/2/distutils/setupscript.html#installing-additional-files
-    data_files=[
-        ('.py2to3cov.json', ['config/config.json'])
-        ]
+    # data_files=[
+    #     ('.py2to3cov.json', ['config/config.json'])
+    #     ]
     )
