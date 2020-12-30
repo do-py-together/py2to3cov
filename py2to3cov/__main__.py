@@ -23,7 +23,7 @@ def get_diff_python_files(root, compare_branch='origin/master'):
     """
     output = subprocess.check_output(['git', 'diff', '--name-only', compare_branch], cwd=root)
     files = output.strip().split('\n')
-    return [os.path.join(root, f) for f in files if f.endswith('.py')]
+    return [os.path.join(root, f) for f in files if f.endswith('.py') and os.path.isfile(os.path.join(root, f))]
 
 
 def get_all_python_files(root):
