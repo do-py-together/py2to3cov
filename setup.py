@@ -31,6 +31,11 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url=package['url'],
+    install_requires=[
+        'argparse==1.4.0',
+        'future==0.17.1',
+        'dominate==2.6.0'
+        ],
     packages=setuptools.find_packages(),
     # https://pypi.org/classifiers/
     classifiers=[
