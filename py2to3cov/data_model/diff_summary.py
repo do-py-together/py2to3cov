@@ -70,7 +70,7 @@ class DiffSummary(object):
         :rtype: str
         """
         if self.remove_line_count:
-            return '{diff_dir}/{filename}.diff'.format(diff_dir=DIFF_DIR,
-                                                       filename=self.filename)
+            return 'diff/{filename}.diff'.format(diff_dir=DIFF_DIR,
+                                                 filename=self.filename)
         else:
             return 'javascript:void(null);'
