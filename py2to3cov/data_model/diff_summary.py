@@ -1,7 +1,7 @@
 """
 Store and register the diff summary.
 """
-from py2to3cov.mgmt.const import DIFF_DIR, ROOT
+from py2to3cov.mgmt.const import ROOT
 
 
 class DiffSummary(object):
@@ -70,7 +70,6 @@ class DiffSummary(object):
         :rtype: str
         """
         if self.remove_line_count:
-            return '{diff_dir}/{filename}.diff'.format(diff_dir=DIFF_DIR,
-                                                       filename=self.filename)
+            return 'diff/{filename}.diff'.format(filename=self.filename)
         else:
             return 'javascript:void(null);'
