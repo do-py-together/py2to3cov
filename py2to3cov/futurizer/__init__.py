@@ -4,6 +4,7 @@ See: `libfuturize.main`
 
 from __future__ import (absolute_import, print_function, unicode_literals)
 
+import json
 import logging
 import optparse
 import os
@@ -271,8 +272,7 @@ def futurize_code(args=None):
                             options.processes)
             except refactor.MultiprocessingUnsupported:
                 assert options.processes > 1
-                print("Sorry, -j isn't " \
-                      "supported on this platform.", file=sys.stderr)
+                print("Sorry, -j isn't supported on this platform.", file=sys.stderr)
                 return 1
         rt.summarize()
 
@@ -302,6 +302,22 @@ def futurize_code(args=None):
 
     with open('{results_dir}/summary.html'.format(results_dir=RESULTS_DIR), 'w+') as summary_file:
         summary_file.write(doc.render())
+
+    # Write a machine readable report that can be parsed later.
+    json_report = {
+        'summary': {
+            'remove_line_count_total': remove_line_count_total
+            },
+        'files': [
+            {
+                'file_name': file_name,
+                'add_line_count': file_summary.add_line_count,
+                'remove_line_count': file_summary.remove_line_count,
+                'percent_coverage': file_summary.percent_coverage,
+                } for file_name, file_summary in DiffSummary.list_all()
+            ]
+        }
+    json.dump(json_report, open('{results_dir}/report.json'.format(results_dir=RESULTS_DIR), 'w+'))
 
     # Return error status (0 if rt.errors is zero)
     return int(bool(rt.errors))
