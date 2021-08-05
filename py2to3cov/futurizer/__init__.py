@@ -1,7 +1,6 @@
 """
 See: `libfuturize.main`
 """
-
 from __future__ import (absolute_import, print_function, unicode_literals)
 
 import json
@@ -14,6 +13,8 @@ from lib2to3 import refactor
 from lib2to3.main import warn
 
 import future.utils
+from do_py import DataObject, R
+from do_py.common.managed_list import ManagedList
 from dominate import document
 from dominate.tags import a, b, h1, p, table, tbody, td, th, thead, tr
 from future import __version__
@@ -28,6 +29,32 @@ from py2to3cov.mgmt.const import DIFF_DIR, RESULTS_DIR
 
 
 fixer_pkg = 'libfuturize.fixes'
+
+
+class TestFailure(DataObject):
+    _restrictions = {
+        'type': R.STR,
+        'message': R.STR,
+        }
+
+
+class TestCase(DataObject):
+    _restrictions = {
+        'file': R.STR,
+        'failure': R(TestFailure, type(None))
+        }
+
+
+class TestReport(DataObject):
+    _restrictions = {
+        'testsuite': ManagedList(TestCase)
+        }
+
+    def to_xml(self):
+        """
+        :rtype: str
+        """
+        return '<testsuite>%s</testsuite>' % ''.join(test_case.to_xml() for test_case in self.testsuite)
 
 
 def futurize_code(args=None):
